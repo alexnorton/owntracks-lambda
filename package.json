@@ -1,0 +1,10 @@
+{
+  "name": "owntracks-lambda",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "<alexnorton@fastmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "mysql": "^2.16.0"
+  }
+}

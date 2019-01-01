@@ -1,0 +1,55 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Globals:
+  Function:
+    Timeout: 3
+
+Resources:
+  HelloWorldFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: src/app.handler
+      Runtime: nodejs8.10
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-65365a19
+        SubnetIds:
+          - subnet-3472e552
+          - subnet-4f70a115
+          - subnet-d406609c
+      Policies:
+        - AWSLambdaVPCAccessExecutionRole
+      Events:
+        HelloWorld:
+          Type: Api
+          Properties:
+            Path: /publish
+            Method: post
+  DatabaseCluster:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      MasterUsername: user
+      MasterUserPassword: password
+      DatabaseName: owntrackslambda
+      Engine: aurora
+      EngineMode: serverless
+      ScalingConfiguration:
+        AutoPause: true
+        MaxCapacity: 16
+        MinCapacity: 2
+        SecondsUntilAutoPause: 300
+
+Outputs:
+  HelloWorldApi:
+    Description: 'API Gateway endpoint URL for Prod stage for Hello World function'
+    Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/'
+
+  HelloWorldFunction:
+    Description: 'Hello World Lambda Function ARN'
+    Value: !GetAtt HelloWorldFunction.Arn
+
+  HelloWorldFunctionIamRole:
+    Description: 'Implicit IAM Role created for Hello World function'
+    Value: !GetAtt HelloWorldFunctionRole.Arn
