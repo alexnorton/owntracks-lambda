@@ -12,6 +12,7 @@ Resources:
       CodeUri: .
       Handler: src/app.handler
       Runtime: nodejs8.10
+      Timeout: 90
       VpcConfig:
         SecurityGroupIds:
           - sg-65365a19
