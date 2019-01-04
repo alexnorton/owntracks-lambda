@@ -4,6 +4,8 @@ Transform: AWS::Serverless-2016-10-31
 Globals:
   Function:
     Timeout: 3
+    CodeUri: .
+    Runtime: nodejs8.10
     Environment:
       Variables:
         DATA_BUCKET: !Ref DataBucket
@@ -12,9 +14,7 @@ Resources:
   PublishFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: .
       Handler: src/publish.handler
-      Runtime: nodejs8.10
       Policies:
         - S3CrudPolicy:
             BucketName: !Ref DataBucket
@@ -24,6 +24,19 @@ Resources:
           Properties:
             Path: /publish
             Method: post
+  ListFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/list.handler
+      Policies:
+        - S3ReadPolicy:
+            BucketName: !Ref DataBucket
+      Events:
+        Publish:
+          Type: Api
+          Properties:
+            Path: /list
+            Method: get
   DataBucket:
     Type: AWS::S3::Bucket
 
