@@ -13,5 +13,3 @@ exports.handler = async () => {
     body: JSON.stringify(objects.map(({ Key }) => Key.replace('.geojson', ''))),
   };
 };
-
-exports.handler();
