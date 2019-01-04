@@ -5,6 +5,6 @@
   "author": "<alexnorton@fastmail.com>",
   "license": "MIT",
   "dependencies": {
-    "mysql": "^2.16.0"
+    "aws-sdk": "^2.383.0"
   }
 }

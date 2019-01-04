@@ -1,53 +1,74 @@
-const mysql = require('mysql');
+const AWS = require('aws-sdk');
 
-exports.handler = (event, context, callback) => {
-  console.log(event);
+const s3 = new AWS.S3();
 
+exports.handler = async event => {
   const payload = JSON.parse(event.body);
 
   if (payload._type !== 'location') {
-    return callback(null, {
+    return {
       statusCode: 200,
       body: '[]',
-    });
+    };
   }
 
-  var connection = mysql.createConnection({
-    host:
-      'owntracks-lambda-databasecluster-bj3ucob2wp42.cluster-cfkjczrkbjmo.eu-west-1.rds.amazonaws.com',
-    user: 'user',
-    password: 'password',
-    database: 'owntrackslambda',
-  });
+  const latitude = payload.lat;
+  const longitude = payload.lon;
+  const date = new Date(payload.tst * 1000);
 
-  connection.connect();
+  const yearPart = date.getUTCFullYear();
+  const monthPart = (date.getUTCMonth() + 1).toString().padStart(2, '0');
+  const datePart = date
+    .getUTCDate()
+    .toString()
+    .padStart(2, '0');
 
-  const update = {
-    tracker_id: payload.tid,
-    latitude: payload.lat,
-    longitude: payload.lon,
-    date: new Date(payload.tst * 1000),
+  const filename = `${yearPart}-${monthPart}-${datePart}.geojson`;
+
+  const pointFeature = {
+    type: 'Feature',
+    geometry: {
+      type: 'Point',
+      coordinates: [longitude, latitude],
+    },
+    properties: {
+      date: date.toISOString(),
+    },
   };
 
-  console.log(update);
+  let object;
 
-  connection.query(
-    'INSERT INTO locations SET ?',
-    update,
-    (error, results, fields) => {
-      if (error) {
-        console.error(error);
-        throw error;
-      }
+  try {
+    object = await s3
+      .getObject({ Bucket: process.env.DATA_BUCKET, Key: filename })
+      .promise();
+  } catch (e) {
+    object = null;
+  }
 
-      console.log(results);
+  let json;
 
-      callback(null, {
-        statusCode: 200,
-        body: '[]',
-      });
-    }
-  );
+  if (object) {
+    json = JSON.parse(object.Body.toString());
 
-  connection.end();
+    json.features.push(pointFeature);
+  } else {
+    json = {
+      type: 'FeatureCollection',
+      features: [pointFeature],
+    };
+  }
+
+  await s3
+    .putObject({
+      Bucket: process.env.DATA_BUCKET,
+      Key: filename,
+      Body: JSON.stringify(json),
+    })
+    .promise();
+
+  return {
+    statusCode: 200,
+    body: '[]',
+  };
 };
