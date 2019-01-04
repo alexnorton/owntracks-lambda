@@ -37,6 +37,19 @@ Resources:
           Properties:
             Path: /list
             Method: get
+  GetFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/get.handler
+      Policies:
+        - S3ReadPolicy:
+            BucketName: !Ref DataBucket
+      Events:
+        Publish:
+          Type: Api
+          Properties:
+            Path: /get/{date}
+            Method: get
   DataBucket:
     Type: AWS::S3::Bucket
 
