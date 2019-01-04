@@ -1,10 +1,6 @@
 CODE_S3_BUCKET="sam-function-code"
 STACK_NAME="owntracks-lambda"
 
-.PHONY: build
-build:
-	sam build
-
 .PHONY: package
 package:
 	sam package \
