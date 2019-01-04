@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const { handler } = require('./app');
+const { handler } = require('./publish');
 
 async function main() {
   const file = fs.readFileSync('locations.csv').toString();
