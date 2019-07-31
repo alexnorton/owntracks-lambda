@@ -19,14 +19,14 @@ class App extends Component {
       view: 'scatter',
     });
 
-    const req = await fetch(`${API_ENDPOINT}/list`);
+    const req = await fetch(`${API_ENDPOINT}/list`, { mode: 'cors' });
     const dates = await req.json();
 
     this.setState({ progress: { total: dates.length, loaded: 0 } });
 
     const data = await Promise.all(
       dates.map(date =>
-        fetch(`${API_ENDPOINT}/get/${date}`)
+        fetch(`${API_ENDPOINT}/get/${date}`, { mode: 'cors' })
           .then(dateReq => dateReq.json())
           .then(dateData => {
             this.setState({
