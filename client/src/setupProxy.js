@@ -6,7 +6,7 @@ dotenv.config();
 module.exports = function(app) {
   app.use(
     proxy('/api/', {
-      target: process.env.API_ENDPOINT,
+      target: process.env.REACT_APP_API_ENDPOINT,
       changeOrigin: true,
       pathRewrite: { '^/api': '' },
     })
