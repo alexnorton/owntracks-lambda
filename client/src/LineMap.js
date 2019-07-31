@@ -2,7 +2,7 @@ import React from 'react';
 
 import ReactMapGL from 'react-map-gl';
 import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
-import DeckGL, { ScatterplotLayer } from 'deck.gl';
+import DeckGL, { LineLayer } from 'deck.gl';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 
@@ -10,21 +10,12 @@ class Map extends React.Component {
   constructor(props) {
     super(props);
 
-    const data = []
-      .concat(
-        ...props.data.map(dateData =>
-          dateData.features.map(feature => ({
-            position: feature.geometry.coordinates,
-            date: new Date(feature.properties.date),
-          }))
-        )
-      )
-      .sort((a, b) => a.date - b.date)
+    const data = props.data
       .map((point, index, points) => ({
-        ...point,
-        duration:
-          points[index + 1] && (points[index + 1].date - point.date) / 1000,
-      }));
+        from: point.position,
+        to: points[index + 1] && points[index + 1].position,
+      }))
+      .filter(({ from, to }) => from && to);
 
     this.state = {
       data,
@@ -52,11 +43,12 @@ class Map extends React.Component {
             width={width}
           >
             <DeckGL {...viewport} width={width} height={height}>
-              <ScatterplotLayer
+              <LineLayer
                 data={data}
-                radiusMinPixels={3}
-                getRadius={({ duration }) => Math.min(duration / 100, 50)}
-                getColor={() => [255, 0, 0, 32]}
+                getSourcePosition={d => d.from}
+                getTargetPosition={d => d.to}
+                getStrokeWidth={1.5}
+                getColor={[0, 123, 255, 255]}
               />
             </DeckGL>
           </ReactMapGL>
