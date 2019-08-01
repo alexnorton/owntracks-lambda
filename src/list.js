@@ -10,6 +10,9 @@ exports.handler = async () => {
   const objects = data.Contents;
 
   return {
+    headers: {
+      'Access-Control-Allow-Origin': process.env.CORS_ORIGIN,
+    },
     body: JSON.stringify(objects.map(({ Key }) => Key.replace('.geojson', ''))),
   };
 };

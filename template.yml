@@ -8,6 +8,7 @@ Globals:
     Environment:
       Variables:
         DATA_BUCKET: !Ref DataBucket
+        CORS_ORIGIN: https://romantic-brattain-ece9de.netlify.com
 
 Resources:
   PublishFunction:

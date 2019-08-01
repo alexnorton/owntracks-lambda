@@ -18,6 +18,9 @@ exports.handler = async event => {
   }
 
   return {
+    headers: {
+      'Access-Control-Allow-Origin': process.env.CORS_ORIGIN,
+    },
     body: object.Body.toString(),
   };
 };
