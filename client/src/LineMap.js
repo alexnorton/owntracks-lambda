@@ -1,10 +1,16 @@
 import React from 'react';
 
-import ReactMapGL from 'react-map-gl';
+import { StaticMap } from 'react-map-gl';
 import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
 import DeckGL, { LineLayer } from 'deck.gl';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
+
+const initialViewState = {
+  latitude: 51.507222,
+  longitude: -0.1275,
+  zoom: 10,
+};
 
 class Map extends React.Component {
   constructor(props) {
@@ -19,39 +25,35 @@ class Map extends React.Component {
 
     this.state = {
       data,
-      viewport: {
-        latitude: 51.507222,
-        longitude: -0.1275,
-        zoom: 10,
-      },
     };
   }
 
   handleViewportChange = viewport => this.setState({ viewport });
 
   render() {
-    const { viewport, data } = this.state;
+    const { data } = this.state;
 
     return (
       <AutoSizer>
         {({ height, width }) => (
-          <ReactMapGL
-            {...viewport}
-            mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
-            onViewportChange={this.handleViewportChange}
-            height={height}
+          <DeckGL
+            initialViewState={initialViewState}
+            controller={true}
             width={width}
+            height={height}
           >
-            <DeckGL {...viewport} width={width} height={height}>
-              <LineLayer
-                data={data}
-                getSourcePosition={d => d.from}
-                getTargetPosition={d => d.to}
-                getStrokeWidth={1.5}
-                getColor={[0, 123, 255, 255]}
-              />
-            </DeckGL>
-          </ReactMapGL>
+            <LineLayer
+              id="line-layer"
+              data={data}
+              getSourcePosition={d => d.from}
+              getTargetPosition={d => d.to}
+              getWidth={1.5}
+              getColor={[0, 123, 255, 255]}
+            />
+            <StaticMap
+              mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
+            />
+          </DeckGL>
         )}
       </AutoSizer>
     );
