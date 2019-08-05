@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 
 import Loading from './Loading';
-import ScatterMap from './LineMap';
-import LineMap from './LineMap';
+import Map from './Map';
 
 const API_ENDPOINT =
   process.env.NODE_ENV === 'development'
@@ -16,7 +15,6 @@ class App extends Component {
     this.setState({
       isLoading: true,
       progress: { total: 0, loaded: 0 },
-      view: 'scatter',
     });
 
     const req = await fetch(`${API_ENDPOINT}/list`);
@@ -59,19 +57,14 @@ class App extends Component {
   }
 
   render() {
-    const { isLoading, progress, data, view } = this.state;
+    const { isLoading, progress, data } = this.state;
 
     if (isLoading) {
       return <Loading progress={progress} />;
     }
 
     if (data) {
-      if (view === 'scatter') {
-        return <LineMap data={data} />;
-      }
-      if (view === 'line') {
-        return <ScatterMap data={data} />;
-      }
+      return <Map data={data} />;
     }
 
     return null;
