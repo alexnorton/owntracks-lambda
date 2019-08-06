@@ -1,10 +1,15 @@
 import { ScatterplotLayer } from 'deck.gl';
 
 const scatterplotLayer = data => {
-  const layerData = data.map((point, index, points) => ({
-    ...point,
-    duration: points[index + 1] && (points[index + 1].date - point.date) / 1000,
-  }));
+  const layerData = [].concat(
+    ...data.map(section =>
+      section.map((point, index, points) => ({
+        ...point,
+        duration:
+          points[index + 1] && (points[index + 1].date - point.date) / 1000,
+      }))
+    )
+  );
 
   return new ScatterplotLayer({
     data: layerData,

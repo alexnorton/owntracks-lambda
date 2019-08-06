@@ -1,12 +1,16 @@
 import { LineLayer } from 'deck.gl';
 
 const lineLayer = data => {
-  const layerData = data
-    .map((point, index, points) => ({
-      from: point.position,
-      to: points[index + 1] && points[index + 1].position,
-    }))
-    .filter(({ from, to }) => from && to);
+  const layerData = [].concat(
+    ...data.map(section =>
+      section
+        .map((point, index, points) => ({
+          from: point.position,
+          to: points[index + 1] && points[index + 1].position,
+        }))
+        .filter(({ from, to }) => from && to)
+    )
+  );
 
   return new LineLayer({
     id: 'line-layer',
