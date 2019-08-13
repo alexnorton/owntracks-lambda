@@ -15,28 +15,24 @@ const initialViewState = {
   zoom: 10,
 };
 
-class Map extends React.Component {
-  render() {
-    const { data } = this.props;
-
-    return (
-      <AutoSizer>
-        {({ height, width }) => (
-          <DeckGL
-            initialViewState={initialViewState}
-            controller={true}
-            width={width}
-            height={height}
-            layers={[lineLayer(data), scatterplotLayer(data)]}
-          >
-            <StaticMap
-              mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
-            />
-          </DeckGL>
-        )}
-      </AutoSizer>
-    );
-  }
+function Map({ data }) {
+  return (
+    <AutoSizer>
+      {({ height, width }) => (
+        <DeckGL
+          initialViewState={initialViewState}
+          controller={true}
+          width={width}
+          height={height}
+          layers={[lineLayer(data), scatterplotLayer(data)]}
+        >
+          <StaticMap
+            mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
+          />
+        </DeckGL>
+      )}
+    </AutoSizer>
+  );
 }
 
 export default Map;

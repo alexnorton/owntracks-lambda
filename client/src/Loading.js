@@ -1,17 +1,13 @@
 import React from 'react';
 
-class Loading extends React.PureComponent {
-  render() {
-    const { progress } = this.props;
-
-    return (
-      <div className="loading">
-        Loading
-        <br />
-        {progress && <progress value={progress.loaded} max={progress.total} />}
-      </div>
-    );
-  }
+function Loading({ progress: { loaded, total } }) {
+  return (
+    <div className="loading">
+      Loading
+      <br />
+      <progress value={loaded} max={total} />
+    </div>
+  );
 }
 
 export default Loading;
