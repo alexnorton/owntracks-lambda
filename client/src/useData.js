@@ -29,7 +29,20 @@ function useData() {
         )
       );
 
-      setData(results);
+      let transformed = []
+        .concat(
+          ...results.map(dateData =>
+            dateData.features.map(feature => ({
+              position: feature.geometry.coordinates,
+              date: new Date(feature.properties.date),
+            }))
+          )
+        )
+        .sort((a, b) => a.date - b.date);
+
+      transformed = [transformed];
+
+      setData(transformed);
       setIsLoading(false);
     }
 
