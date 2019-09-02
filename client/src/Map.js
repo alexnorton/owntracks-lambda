@@ -4,9 +4,6 @@ import { StaticMap } from 'react-map-gl';
 import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
 import DeckGL from 'deck.gl';
 
-import lineLayer from './layers/lineLayer';
-import scatterplotLayer from './layers/scatterplotLayer';
-
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 const initialViewState = {
@@ -15,7 +12,7 @@ const initialViewState = {
   zoom: 10,
 };
 
-function Map({ data }) {
+function Map({ layers }) {
   return (
     <AutoSizer>
       {({ height, width }) => (
@@ -24,7 +21,7 @@ function Map({ data }) {
           controller={true}
           width={width}
           height={height}
-          layers={[lineLayer(data), scatterplotLayer(data)]}
+          layers={layers}
         >
           <StaticMap
             mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}

@@ -1,6 +1,21 @@
 import { ScatterplotLayer } from 'deck.gl';
 
-const scatterplotLayer = data => {
+const optionsSchema = {
+  radiusMin: {
+    type: 'number',
+    default: 3,
+  },
+  radiusFactor: {
+    type: 'radiusFactor',
+    default: 100,
+  },
+  color: {
+    type: 'color',
+    default: [255, 0, 0, 32],
+  },
+};
+
+const layerFunction = (data, { radiusMin, radiusFactor, color }) => {
   const layerData = [].concat(
     ...data.map(section =>
       section.map((point, index, points) => ({
@@ -13,10 +28,13 @@ const scatterplotLayer = data => {
 
   return new ScatterplotLayer({
     data: layerData,
-    radiusMinPixels: 3,
-    getRadius: ({ duration }) => Math.min(duration / 100, 50),
-    getFillColor: () => [255, 0, 0, 32],
+    radiusMinPixels: radiusMin,
+    getRadius: ({ duration }) => Math.min(duration / radiusFactor, 50),
+    getFillColor: () => color,
   });
 };
 
-export default scatterplotLayer;
+export default {
+  optionsSchema,
+  layerFunction,
+};

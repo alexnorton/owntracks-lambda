@@ -1,6 +1,17 @@
 import { LineLayer } from 'deck.gl';
 
-const lineLayer = data => {
+const optionsSchema = {
+  color: {
+    type: 'color',
+    default: [0, 123, 255, 255],
+  },
+  width: {
+    type: 'number',
+    default: 1.5,
+  },
+};
+
+const layerFunction = (data, { color, width }) => {
   const layerData = [].concat(
     ...data.map(section =>
       section
@@ -17,9 +28,12 @@ const lineLayer = data => {
     data: layerData,
     getSourcePosition: d => d.from,
     getTargetPosition: d => d.to,
-    getWidth: 1.5,
-    getColor: [0, 123, 255, 255],
+    getWidth: width,
+    getColor: color,
   });
 };
 
-export default lineLayer;
+export default {
+  optionsSchema,
+  layerFunction,
+};
