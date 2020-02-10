@@ -1,0 +1,7 @@
+{
+  "name": "publish",
+  "version": "1.0.0",
+  "dependencies": {
+    "aws-sdk": "^2.383.0"
+  }
+}

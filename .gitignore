@@ -1,4 +1,4 @@
-packaged.yml
 node_modules
 .env
 client/public/api
+.aws-sam

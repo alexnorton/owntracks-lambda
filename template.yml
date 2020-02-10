@@ -1,4 +1,4 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 
 Globals:
@@ -14,8 +14,8 @@ Resources:
   PublishFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: src/publish.js
-      Handler: publish.handler
+      CodeUri: functions/publish/
+      Handler: index.handler
       Policies:
         - S3CrudPolicy:
             BucketName: !Ref DataBucket
@@ -28,8 +28,8 @@ Resources:
   ListFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: src/list.js
-      Handler: list.handler
+      CodeUri: functions/list/
+      Handler: index.handler
       Policies:
         - S3ReadPolicy:
             BucketName: !Ref DataBucket
@@ -42,8 +42,8 @@ Resources:
   GetFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: src/get.js
-      Handler: get.handler
+      CodeUri: functions/get/
+      Handler: index.handler
       Policies:
         - S3ReadPolicy:
             BucketName: !Ref DataBucket
@@ -58,4 +58,4 @@ Resources:
 
 Outputs:
   Api:
-    Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/'
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
